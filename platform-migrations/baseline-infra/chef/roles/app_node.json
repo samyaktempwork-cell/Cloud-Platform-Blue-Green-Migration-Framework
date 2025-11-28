@@ -1,0 +1,7 @@
+{
+  "name": "app_node",
+  "run_list": [
+    "recipe[base_hardening]",
+    "recipe[bootstrap]"
+  ]
+}

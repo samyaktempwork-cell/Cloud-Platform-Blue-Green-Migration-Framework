@@ -1,0 +1,14 @@
+# Managed by Chef - DO NOT EDIT
+
+Port 22
+Protocol 2
+
+PermitRootLogin <%= @permit_root_login %>
+PasswordAuthentication <%= @password_auth %>
+
+ChallengeResponseAuthentication no
+UsePAM yes
+X11Forwarding no
+AllowTcpForwarding no
+ClientAliveInterval 300
+ClientAliveCountMax 3

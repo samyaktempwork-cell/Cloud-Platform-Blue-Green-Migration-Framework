@@ -1,0 +1,6 @@
+{
+  "id": "rapid7",
+  "download_url": "https://download.rapid7.com/insight-agent/linux/latest/agent.rpm",
+  "service_name": "ir_agent",
+  "config_path": "/etc/ir_agent/config"
+}

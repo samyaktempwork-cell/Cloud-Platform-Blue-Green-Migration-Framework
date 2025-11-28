@@ -1,0 +1,6 @@
+{
+  "id": "filebeat",
+  "version": "8.12.x",
+  "download_url": "https://artifacts.elastic.co/beats/filebeat",
+  "service_name": "filebeat"
+}
