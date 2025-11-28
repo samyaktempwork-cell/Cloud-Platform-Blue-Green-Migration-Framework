@@ -3,6 +3,8 @@ resource "aws_launch_template" "blue" {
   image_id      = var.ami_blue
   instance_type = var.instance_type
 
+  user_data = base64encode(data.templatefile.chef_userdata)
+
   vpc_security_group_ids = [var.app_security_group_id]
 
   tag_specifications {
@@ -19,6 +21,8 @@ resource "aws_launch_template" "green" {
   name_prefix   = "${var.app_name}-green-"
   image_id      = var.ami_green
   instance_type = var.instance_type
+
+  user_data = base64encode(data.templatefile.chef_userdata)
 
   vpc_security_group_ids = [var.app_security_group_id]
 
@@ -75,5 +79,13 @@ resource "aws_autoscaling_group" "green" {
     key                 = "Name"
     value               = "${var.app_name}-green"
     propagate_at_launch = true
+  }
+}
+
+data "templatefile" "chef_userdata" {
+  template = "${path.module}/templates/chef_bootstrap.sh.tpl"
+
+  vars = {
+    chef_role = var.chef_role
   }
 }

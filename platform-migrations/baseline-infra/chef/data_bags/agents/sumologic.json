@@ -1,0 +1,6 @@
+{
+  "id": "sumologic",
+  "collector_url": "https://collectors.sumologic.com",
+  "token": "YOUR_SUMO_ACCESS_ID",
+  "config_path": "/etc/sumo.conf"
+}

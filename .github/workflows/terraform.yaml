@@ -1,7 +1,11 @@
-name: Terraform Base Infrastructure
+name: Terraform Multi-Environment Pipeline
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'platform-migrations/baseline-infra/terraform/**'
   push:
     branches: [ main ]
     paths:
@@ -9,36 +13,52 @@ on:
 
 jobs:
   terraform:
-    name: Terraform Init/Plan/Validate
+    name: Terraform (${{ matrix.env }})
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        env: [dev, stage, prod]
+
     env:
-      TF_WORKING_DIR: platform-migrations/baseline-infra/terraform/accounts/dev
+      TF_WORK_DIR: platform-migrations/baseline-infra/terraform
+      AWS_REGION: ap-south-1
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Configure AWS Credentials
+      # SETUP AWS CREDS FOR EACH ENV
+      - name: Configure AWS Credentials (AssumeRole)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-south-1
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ secrets[matrix.env == 'dev' && 'DEV_IAM_ROLE' || matrix.env == 'stage' && 'STAGE_IAM_ROLE' || 'PROD_IAM_ROLE'] }}
+          role-session-name: github-actions
 
+      #  INSTALL TERRAFORM 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.6.6
 
-      - name: Terraform Format
-        run: terraform -chdir=$TF_WORKING_DIR fmt -check
-
+      #  INIT WITH BACKEND CONFIG 
       - name: Terraform Init
-        run: terraform -chdir=$TF_WORKING_DIR init
+        run: terraform -chdir=$TF_WORK_DIR init -backend-config="env/${{ matrix.env }}/backend.hcl"
 
+      #  FORMAT CHECK 
+      - name: Terraform FMT
+        run: terraform -chdir=$TF_WORK_DIR fmt -check
+
+      #  VALIDATE 
       - name: Terraform Validate
-        run: terraform -chdir=$TF_WORKING_DIR validate
+        run: terraform -chdir=$TF_WORK_DIR validate
 
+      #  PLAN 
       - name: Terraform Plan
-        run: terraform -chdir=$TF_WORKING_DIR plan
+        run: terraform -chdir=$TF_WORK_DIR plan -var-file="env/${{ matrix.env }}/${{ matrix.env }}.tfvars"
+
+      #  APPLY ONLY ON PUSH TO MAIN 
+      - name: Terraform Apply
+        if: github.event_name == 'push'
+        run: terraform -chdir=$TF_WORK_DIR apply -auto-approve -var-file="env/${{ matrix.env }}/${{ matrix.env }}.tfvars"

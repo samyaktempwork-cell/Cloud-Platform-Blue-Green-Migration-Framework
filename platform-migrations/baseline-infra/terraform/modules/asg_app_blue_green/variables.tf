@@ -68,3 +68,8 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "chef_role" {
+  description = "Chef role applied to instances in this ASG"
+  type        = string
+}

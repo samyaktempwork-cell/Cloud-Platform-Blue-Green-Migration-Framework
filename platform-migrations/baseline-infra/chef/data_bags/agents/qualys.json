@@ -1,0 +1,7 @@
+{
+  "id": "qualys",
+  "activation_id": "YOUR_ACTIVATION_ID",
+  "customer_id": "YOUR_CUSTOMER_ID",
+  "download_url": "https://qualys-download.com/cloud-agent/qagent.rpm",
+  "service_name": "qualys-cloud-agent"
+}

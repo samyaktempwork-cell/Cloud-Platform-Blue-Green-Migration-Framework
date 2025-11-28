@@ -1,0 +1,6 @@
+{
+  "id": "datadog",
+  "api_key": "YOUR_API_KEY",
+  "site": "datadoghq.com",
+  "log_collection": true
+}
