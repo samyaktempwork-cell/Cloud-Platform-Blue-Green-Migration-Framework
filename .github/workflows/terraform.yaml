@@ -1,0 +1,44 @@
+name: Terraform Base Infrastructure
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'platform-migrations/baseline-infra/terraform/**'
+
+jobs:
+  terraform:
+    name: Terraform Init/Plan/Validate
+    runs-on: ubuntu-latest
+
+    env:
+      TF_WORKING_DIR: platform-migrations/baseline-infra/terraform/accounts/dev
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.6
+
+      - name: Terraform Format
+        run: terraform -chdir=$TF_WORKING_DIR fmt -check
+
+      - name: Terraform Init
+        run: terraform -chdir=$TF_WORKING_DIR init
+
+      - name: Terraform Validate
+        run: terraform -chdir=$TF_WORKING_DIR validate
+
+      - name: Terraform Plan
+        run: terraform -chdir=$TF_WORKING_DIR plan
