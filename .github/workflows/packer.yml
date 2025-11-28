@@ -1,0 +1,17 @@
+name: Packer Base AMI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - "platform-migrations/baseline-infra/packer/**"
+
+jobs:
+  packer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-packer@v3
+      - run: packer validate platform-migrations/baseline-infra/packer/base-ami/al2023-base.pkr.hcl
+      - run: packer build platform-migrations/baseline-infra/packer/base-ami/al2023-base.pkr.hcl
