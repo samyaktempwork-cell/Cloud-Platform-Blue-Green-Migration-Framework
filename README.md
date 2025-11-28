@@ -1,146 +1,82 @@
-# Cloud Platform Blue/Green Migration Framework  
-### Security, Observability & Compliance Modernization on AWS (Terraform, Packer, Chef)
 
-This project demonstrates a **real-world enterprise migration framework** where core AWS infrastructure remains unchanged (Terraform, Packer, Chef Server), while multiple platform components are modernized using a **Blue/Green migration strategy**.
+# Cloud Platform Blue/Green Migration Framework
+### A Reusable, Enterprise-Grade Framework for Agent, Security, Observability & Compliance Migrations
 
-It includes **four realistic migrations**, all automated and orchestrated across AWS:
+This repository provides a **reusable platform engineering framework** for performing large-scale,
+zero-downtime migrations using the **Blue/Green deployment pattern**. It is designed to support:
 
-- **Rapid7 ➜ Qualys** (Vulnerability Management)
-- **Datadog ➜ Sumo Logic** (Observability: Metrics, APM, Logs)
-- **Filebeat ➜ Sumo Logic** (Logging Pipeline)
-- **Legacy Chef InSpec ➜ Modernized Org-Level Compliance Profiles**
+- Security agent migrations  
+- Logging pipeline transitions  
+- Observability migrations  
+- Compliance and hardening modernization  
+- Multi-account cloud environments  
+- Automated image building  
+- CI/CD driven infra changes  
 
-This repository is designed as a **production-like, end-to-end platform engineering project** that demonstrates:
-- Infrastructure-as-Code (Terraform)
-- Immutable Infrastructure (Packer AMIs)
-- Configuration Management (Chef Server)
-- Blue/Green release strategy
-- CI/CD automation
-- Agent lifecycle management
-- Migration validation steps
-- Rollback strategy
+This framework is cloud-agnostic but includes a full reference implementation for AWS using:
 
----
-
-##  Architecture Overview
-
-### **Static Baseline Infrastructure**
-These components remain unchanged and act as the foundation:
-- **AWS** (VPC, EC2, ALB/Target Groups, ASG)
-- **Terraform** (IaC for environment provisioning)
+- **Terraform** (IaC)
 - **Packer** (AMI builds)
-- **Chef Server** (configuration management)
+- **Chef** (configuration management)
+- **GitHub Actions** (CI/CD)
+- **InSpec** (compliance)
 
 ---
 
-##  Blue/Green Migration Flow  
-All migrations follow this standardized flow:
-
-1. **Packer builds a new Green AMI**
-   - Removes Rapid7, Datadog, Filebeat  
-   - Installs Qualys agent  
-   - Installs Sumo Logic collector  
-   - Updates logging paths  
-   - Includes InSpec wrapper & new profiles  
-
-2. **Terraform creates Green ASG**
-   - Tags: `color=green`  
-   - Env: dev → stage → prod  
-   - Chef bootstraps on instance startup  
-
-3. **Chef configures agents on Green nodes**
-   - Qualys activation  
-   - Sumo sources, dashboards  
-   - Application log configuration  
-
-4. **InSpec runs compliance profiles**
-   - CIS benchmarks  
-   - Org-specific hardening  
-   - Application security checks  
-
-5. **Validation**
-   - Qualys dashboard detects new assets  
-   - Sumo logs & metrics visible  
-   - InSpec passes on Green nodes  
-
-6. **Traffic Shift**
-   - ALB/ELB target group updated → Green ASG  
-
-7. **Blue Decommission**
-   - Terraform scales Blue ASG to zero  
-   - Old AMIs & agents removed  
-
----
-
-##  Repository Structure (Suggested)
+##  Repository Structure
 
 ```
-platform-migrations/
-├── README.md
-├── docs/
-├── diagrams/
-├── terraform/
-├── packer/
-├── chef/
-└── inspec/
+Cloud-Platform-Blue-Green-Migration-Framework/
+│
+├── platform-migrations/            # Full implementation using AWS, Chef, Packer, Terraform
+│
+├── framework-core/                 # Future reusable modules (generic blue/green engine, modules)
+│
+├── examples/                       # Minimal examples showcasing parts of the framework
+│
+└── README.md                       # This file
 ```
 
 ---
 
-##  Migration Modules
+##  Purpose of This Framework
 
-### **1. Rapid7 → Qualys**
-- Remove Rapid7 agent  
-- Install & activate Qualys agent  
-- Asset tagging validation  
+Most enterprises perform migrations like:
 
-### **2. Datadog → Sumo Logic**
-- Remove Datadog  
-- Install Sumo Logic collector  
-- Configure dashboards, log & metric sources  
+- Rapid7 → Qualys  
+- Datadog → Sumo Logic  
+- Filebeat → Sumo Logic  
+- Legacy compliance → InSpec profiles  
 
-### **3. Filebeat → Sumo Logic**
-- Remove Filebeat  
-- Route logs through Sumo collector  
-- Line-count and ingestion validation  
+All these follow the **same strategy**:
 
-### **4. InSpec Modernization**
-- New CIS + organizational profiles  
-- Automated InSpec runs during Green testing  
+1. Build new Green AMI  
+2. Deploy Green ASG  
+3. Apply config with Chef  
+4. Validate (logs, metrics, scans, compliance)  
+5. Traffic shift (Blue → Green)  
+6. Decommission Blue  
 
----
-
-##  Usage Flow
-
-```
-packer build packer/templates/app-green.json
-terraform apply terraform/envs/dev
-validate → shift traffic → promote AMI
-terraform apply stage → prod
-```
+This framework **standardizes the entire lifecycle**, making migrations repeatable, auditable, and safe.
 
 ---
 
-##  Rollback Strategy
+##  Technologies Used
 
-If validation fails:
-
-1. Switch ALB back to Blue  
-2. Destroy Green ASG  
-3. Fix cookbooks / AMI issues  
-4. Rebuild Green v2  
-5. Retry rollout  
+- AWS (multi-account)
+- Terraform 1.x  
+- Packer HCL2  
+- Chef Infra Server  
+- Chef Cookbooks & InSpec  
+- GitHub Actions CI/CD  
+- Sumo Logic, Qualys (migration modules)
 
 ---
 
-##  Summary
+##  Status
 
-This project is a **production-ready blueprint** for modernizing:  
-- Security Agents  
-- Observability Stacks  
-- Logging Pipelines  
-- Compliance Scanning  
-
-Using **AWS + Terraform + Packer + Chef + Blue/Green**.
-
-It demonstrates senior-level DevOps / Platform Engineering capabilities end-to-end.
+✔️ Root documentation created  
+⬜ Baseline infrastructure (in progress)  
+⬜ Migration modules  
+⬜ CI/CD pipelines  
+⬜ Architecture diagrams  
