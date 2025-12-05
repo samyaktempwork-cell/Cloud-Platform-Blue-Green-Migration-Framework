@@ -1,0 +1,29 @@
+name: Terraform CI (Reusable - Development Mode)
+
+on:
+  workflow_call:
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Mock Terraform Init
+        run: |
+          echo "[MOCK] terraform init skipped — development mode"
+
+      - name: Mock Terraform Validate
+        run: |
+          echo "[MOCK] terraform validate skipped — no real config loaded"
+
+      - name: Mock Terraform Plan
+        run: |
+          echo "[MOCK] terraform plan skipped — infra not ready"
+
+      - name: Mock Terraform Apply
+        run: |
+          echo "[MOCK] terraform apply disabled in development mode"

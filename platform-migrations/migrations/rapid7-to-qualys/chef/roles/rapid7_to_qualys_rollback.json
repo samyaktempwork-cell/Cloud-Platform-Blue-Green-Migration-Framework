@@ -1,0 +1,13 @@
+{
+  "name": "rapid7_to_qualys_rollback",
+  "description": "Rollback role: restores Rapid7 and removes Qualys",
+  "run_list": [
+    "recipe[rapid7_to_qualys::rollback]"
+  ],
+  "default_attributes": {
+    "migration": {
+      "log_dir": "/opt/migration/logs",
+      "status_dir": "/opt/migration/status"
+    }
+  }
+}

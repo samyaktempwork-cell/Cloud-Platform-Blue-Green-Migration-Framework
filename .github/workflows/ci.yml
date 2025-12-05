@@ -1,0 +1,22 @@
+name: Master CI Pipeline (Dispatcher)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+
+  packer:
+    uses: ./.github/workflows/packer.yml
+    secrets: inherit
+
+  chef_lint:
+    uses: ./.github/workflows/chef-base-lint.yml
+    secrets: inherit
+
+  terraform:
+    uses: ./.github/workflows/terraform.yml
+    secrets: inherit

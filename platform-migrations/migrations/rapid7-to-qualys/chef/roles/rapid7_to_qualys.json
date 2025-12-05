@@ -1,0 +1,21 @@
+{
+  "name": "rapid7_to_qualys",
+  "description": "Role to migrate from Rapid7 Insight Agent to Qualys Cloud Agent",
+  "run_list": [
+    "recipe[rapid7_to_qualys::logging]",
+    "recipe[rapid7_to_qualys::remove_rapid7]",
+    "recipe[rapid7_to_qualys::install_qualys]",
+    "recipe[rapid7_to_qualys::validate]"
+  ],
+  "default_attributes": {
+    "migration": {
+      "log_dir": "/opt/migration/logs",
+      "status_dir": "/opt/migration/status",
+      "validate_delay": 25,
+      "rollback_enabled": true,
+      "rotate_count": 14,
+      "rotate_size": "100M"
+    }
+  },
+  "override_attributes": {}
+}

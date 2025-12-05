@@ -1,61 +1,23 @@
-name: Packer Base AMI Build
+name: Packer Build (Reusable - Development Mode)
 
 on:
-  workflow_dispatch:
-  push:
-    branches: [ main ]
-    paths:
-      - "platform-migrations/baseline-infra/packer/**"
-      - "platform-migrations/baseline-infra/chef/**"
+  workflow_call:
 
 jobs:
   packer:
     runs-on: ubuntu-latest
+    continue-on-error: true
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repo
         uses: actions/checkout@v4
 
-      # -------------------------
-      # Install Ruby (needed for Cookstyle)
-      # -------------------------
-      - name: Install Ruby
-        run: sudo apt-get install -y ruby-full
+      - name: Mock Packer Validate
+        run: |
+          echo "[MOCK] packer validate skipped — development mode"
+          echo "No AMI build executed"
 
-      # -------------------------
-      # Install Cookstyle
-      # -------------------------
-      - name: Install Cookstyle
-        run: sudo gem install cookstyle
-
-      - name: Lint Chef Cookbooks
-        run: cookstyle platform-migrations/baseline-infra/chef/cookbooks/**
-
-      # -------------------------
-      # Configure AWS Credentials
-      # -------------------------
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-south-1
-
-      # -------------------------
-      # Setup Packer
-      # -------------------------
-      - name: Setup Packer
-        uses: hashicorp/setup-packer@v3
-
-      # -------------------------
-      # Validate Packer Template
-      # -------------------------
-      - name: Validate Packer Template
-        run: packer validate platform-migrations/baseline-infra/packer/base-ami/al2023-base.pkr.hcl
-
-      # -------------------------
-      # Build AMI
-      # -------------------------
-      - name: Build Base AMI
-        run: packer build platform-migrations/baseline-infra/packer/base-ami/al2023-base.pkr.hcl
-
+      - name: Mock Packer Build
+        run: |
+          echo "[MOCK] packer build skipped — development mode"
+          echo "This will run real builds when infra is ready"

@@ -1,0 +1,7 @@
+{
+  "id": "rapid7",
+  "package_name": "insight-agent",
+  "service_name": "ir_agent",
+  "config_path": "/opt/rapid7/ir_agent",
+  "notes": "This file should NOT contain secrets. Use SSM for sensitive tokens."
+}

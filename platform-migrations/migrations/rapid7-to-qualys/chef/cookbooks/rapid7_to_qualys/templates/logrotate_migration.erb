@@ -1,0 +1,13 @@
+# Log rotation for migration logs
+<%= @log_dir %>/migration.log {
+    su root root
+    daily
+    rotate <%= @rotate_count %>
+    size <%= @rotate_size %>
+    copytruncate
+    missingok
+    notifempty
+    compress
+    delaycompress
+    create 0644 root root
+}

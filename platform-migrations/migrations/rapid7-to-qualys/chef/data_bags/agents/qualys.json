@@ -1,0 +1,9 @@
+{
+  "id": "qualys",
+  "package_url": "https://example.com/qualys/qualys-cloud-agent.rpm",
+  "activation_id": "<QUALYS_ACTIVATION_ID>",
+  "customer_id": "<QUALYS_CUSTOMER_ID>",
+  "service_name": "qualys-cloud-agent",
+  "install_dir": "/opt/qualys",
+  "notes": "Replace activation_id/customer_id with secure values fetched from SSM/Secrets Manager at runtime."
+}
